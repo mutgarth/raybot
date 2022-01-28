@@ -1,17 +1,12 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import numpy as np
 import os
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-driver.get("https://valorinveste.globo.com/cotacoes/")
+from utils import get_web_content
 
-symbols=[]
-
-content = driver.page_source
+content = get_web_content("https://valorinveste.globo.com/cotacoes/")
 soup = BeautifulSoup(content, "lxml")
+symbols=[]
 
 rows = soup.findAll('tr')
 
@@ -20,7 +15,6 @@ for tr in rows:
         symbols.append(tr.select('td')[1].text)
     except Exception:
         pass
-
 
 symbols = [symbols[k].strip() +'.SA' for k in range(len(symbols))]
 
